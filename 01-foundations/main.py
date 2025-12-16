@@ -3,9 +3,7 @@ import os
 
 def main() -> None:
 
-    loaded = dotenv.load_dotenv(override=True)
-    
-    if loaded:
+    if dotenv.load_dotenv(override=True):
         openai_api_key = try_get_key('OPENAI_API_KEY')
         anthropic_api_key = try_get_key('ANTHROPIC_API_KEY')
         google_api_key = try_get_key('GOOGLE_API_KEY')
