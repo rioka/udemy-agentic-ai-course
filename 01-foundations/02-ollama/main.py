@@ -52,7 +52,7 @@ def get_question(host: str, model: str) -> str | None:
 
     request = "Please come up with a challenging, nuanced question that I can ask a number of LLMs to evaluate their intelligence. "
     request += "Answer only with the question, no explanation."
-    messages: list[openai.types.chat.ChatCompletionMessageParam] = [{"role": "user", "content": request}]
+    messages = [openai.types.chat.ChatCompletionUserMessageParam(role = "user", content = request)]
 
     client = openai.OpenAI(base_url=host, api_key='ollama')
     response = client.chat.completions.create(model=model, messages=messages)
@@ -61,14 +61,14 @@ def get_question(host: str, model: str) -> str | None:
 
 def send_question(host: str, model: str, question: str) -> str | None:
 
-    messages: list[openai.types.chat.ChatCompletionMessageParam] = [{"role": "user", "content": question}]
+    messages = [openai.types.chat.ChatCompletionUserMessageParam(role = "user", content = question)]
     client = openai.OpenAI(base_url=host, api_key='ollama')
     response = client.chat.completions.create(model=model, messages=messages)
     return response.choices[0].message.content
 
 def evaluate_response(host: str, model: str, question: str, answers: list[str]) -> str | None:
 
-    judge = f"""You are judging an answer tothis question:
+    judge = f"""You are judging an answer to this question:
 
     {question}
 
@@ -88,7 +88,7 @@ def evaluate_response(host: str, model: str, question: str, answers: list[str]) 
 
     Now respond with the JSON I've given, nothing else."""
 
-    messages: list[openai.types.chat.ChatCompletionMessageParam]  = [{"role": "user", "content": judge}]
+    messages = [openai.types.chat.ChatCompletionUserMessageParam(role = "user", content = judge)]
 
     client = openai.OpenAI(base_url=host, api_key='ollama')
     response = client.chat.completions.create(
