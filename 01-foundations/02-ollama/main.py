@@ -22,7 +22,7 @@ def main() -> None:
     answers = []
 
     print("**Asking Ollama**\n")
-    answer = send_question(f'{ollama_host}/v1', ollama_model, question)
+    answer = ask_question(f'{ollama_host}/v1', ollama_model, question)
     # Using plain `print` here, because we're running it from the console
     if answer is None:
         print("No answer was provided")
@@ -32,7 +32,7 @@ def main() -> None:
     answers.append(answer)
 
     print("**Asking LocalAI**\n")
-    answer = send_question(f'{localai_host}/v1', localai_model, question)
+    answer = ask_question(f'{localai_host}/v1', localai_model, question)
     if answer is None:
         print("No answer was provided")
         return
@@ -40,6 +40,7 @@ def main() -> None:
     print(f"**Answer (LocalAI)**:\n{answer}\n")
     answers.append(answer)
 
+    print("**Evaluating responses**:\n")
     evaluation = evaluate_response(f'{ollama_host}/v1', 'llama3.2', question, answers)
 
     if evaluation is None:
@@ -59,7 +60,7 @@ def get_question(host: str, model: str) -> str | None:
 
     return response.choices[0].message.content
 
-def send_question(host: str, model: str, question: str) -> str | None:
+def ask_question(host: str, model: str, question: str) -> str | None:
 
     messages = [openai.types.chat.ChatCompletionUserMessageParam(role = "user", content = question)]
     client = openai.OpenAI(base_url=host, api_key='ollama')
