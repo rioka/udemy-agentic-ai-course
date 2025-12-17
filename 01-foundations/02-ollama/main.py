@@ -13,6 +13,12 @@ def main() -> None:
 
     print(question)
 
+    if question is None:
+        print("No question to ask")
+        return
+
+    answer = send_question(f'{ollama_host}/v1', model_name, question)
+    print(answer)
     ##IPython.display.display(IPython.display.Markdown(answer))
     #display(Markdown(answer))
     #competitors.append(model_name)
@@ -24,9 +30,16 @@ def get_question(host: str, model: str) -> str | None:
     request += "Answer only with the question, no explanation."
     messages: list[openai.types.chat.ChatCompletionMessageParam] = [{"role": "user", "content": request}]
 
-    ollama = openai.OpenAI(base_url=host, api_key='ollama')
-    response = ollama.chat.completions.create(model=model, messages=messages)
+    client = openai.OpenAI(base_url=host, api_key='ollama')
+    response = client.chat.completions.create(model=model, messages=messages)
 
+    return response.choices[0].message.content
+
+def send_question(host: str, model: str, question: str) -> str | None:
+
+    messages: list[openai.types.chat.ChatCompletionMessageParam] = [{"role": "user", "content": question}]
+    client = openai.OpenAI(base_url=host, api_key='ollama')
+    response = client.chat.completions.create(model=model, messages=messages)
     return response.choices[0].message.content
 
 if __name__ == "__main__":
