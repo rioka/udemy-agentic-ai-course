@@ -7,9 +7,11 @@ def main() -> None:
 
     ollama_host = os.getenv('OLLAMA_HOST', 'http://localhost:11434')
     ollama_model = os.getenv('OLLAMA_MODEL', 'llama3.2:1b')
+    ollama_api_key = os.getenv('OLLAMA_API_KEY', 'not-required')
 
     localai_host = os.getenv('LOCALAI_HOST', 'http://localhost:8765')
     localai_model = os.getenv('LOCALAI_MODEL', 'dolphin3.0-qwen2.5-3b')
+    localai_api_key = os.getenv('LOCALAI_API_KEY', 'not-required')
 
     google_api_uri = os.getenv('GOOGLE_API_URI', 'https://generativelanguage.googleapis.com/v1beta/openai/')
     google_model = os.getenv('GOOGLE_API_MODEL', 'gemini-2.5-flash')
@@ -26,7 +28,7 @@ def main() -> None:
     answers = []
 
     print("**Asking Ollama**\n")
-    answer = ask_question(f'{ollama_host}/v1', ollama_model, None, question=question)
+    answer = ask_question(f'{ollama_host}/v1', ollama_model, ollama_api_key, question)
     # Using plain `print` here, because we're running it from the console
     if answer is None:
         print("No answer was provided")
@@ -36,7 +38,7 @@ def main() -> None:
     answers.append(answer)
 
     print("**Asking LocalAI**\n")
-    answer = ask_question(f'{localai_host}/v1', localai_model, None, question=question)
+    answer = ask_question(f'{localai_host}/v1', localai_model, localai_api_key, question)
     if answer is None:
         print("No answer was provided")
         return

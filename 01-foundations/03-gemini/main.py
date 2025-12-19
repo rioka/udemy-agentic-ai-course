@@ -3,6 +3,7 @@ import os
 import openai.types.chat
 from pypdf import PdfReader
 import gradio
+import pathlib
 
 def main() -> None:
 
@@ -13,6 +14,7 @@ def main() -> None:
         print("Missing Google API key: cannot proceed")
         return
 
+    SCRIPT_DIR = pathlib.Path(__file__).resolve().parent
     gemini = openai.OpenAI(api_key=google_api_key, base_url=google_api_url)
     model_name = "gemini-2.5-flash"
 
@@ -25,20 +27,21 @@ def main() -> None:
     # print(answer)
 
     print('Reading CV...')
-    cv = read_cv('me/cv_2025.pdf')
+    cv = read_cv(f'{SCRIPT_DIR.parent}/me/cv_2025.pdf')
 
     print('Reading summary...')
-    summary = read_text('me/summary.txt')
+    summary = read_text(f'{SCRIPT_DIR.parent}/me/summary.txt')
 
     name = "Riccardo Dozzo"
 
     system_prompt = get_system_prompt(name, cv, summary)
 
-    answer = chat(gemini, model_name, system_prompt, '', [])
+    answer = chat(gemini, model_name, system_prompt, 'What would you focus on in the first 3 months in a new position?', [])
+    print(answer) 
 
-    gradio.ChatInterface(chat).launch()
+    #gradio.ChatInterface(chat).launch()
 
-    # This question is not anwered properly, because it does not know who I am referring to,
+    # This question is not answered properly, because it does not know who I am referring to,
     # because this is a *new* conversation for Gemini
     # question = "What did he do after retiring?"
     # messages = [openai.types.chat.ChatCompletionUserMessageParam(role = "user", content = question)]
