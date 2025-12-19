@@ -1,0 +1,21 @@
+services:
+
+  ollama:
+    container_name: udemy-ollama
+    image: ollama/ollama
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "11434:11434"
+
+  local-ai:
+    container_name: udemy-localai
+    image: localai/localai
+    volumes:
+      - localai-data:/models:cached
+    ports:
+      - "8765:8080"
+
+volumes:
+  ollama-data:
+  localai-data:

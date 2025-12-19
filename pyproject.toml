@@ -1,7 +1,11 @@
 [project]
 name = "udemy-agentic-ai-course"
 version = "0.1.0"
-description = "Add your description here"
+description = "Sample code for Udemy agentic AI course"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "dotenv>=0.9.9",
+    "ipython>=9.8.0",
+    "openai>=2.12.0",
+]
